@@ -17,7 +17,7 @@ output wire [31:0] alu_result, rdata2out,
 output wire [4:0] five_bit_muxout
 );
 // signals
-wire [31:0] adder_out, b, aluout;//internal wires to connect internal EXECUTE components together
+wire [31:0] adder_out, b, aluout;
 wire [4:0] muxout;
 wire [2:0] control;
 wire aluzero;
@@ -27,7 +27,7 @@ adder adder3(
 .add_out(adder_out)
 );
 bottom_mux bottom_mux3(
-.a(instrout_1511),  //in case of error, check this
+.a(instrout_1511),  
 .b(instrout_2016),
 .sel(regdst),  
 .y(muxout)

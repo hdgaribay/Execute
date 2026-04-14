@@ -1,62 +1,55 @@
-//executeTB.v
-
 module executeTB;
-    reg clk;
-    reg [1:0] ctlwb_in, ctlm_in;
-    reg [31:0] npc, rdata1, rdata2, s_extend;
-    reg [4:0] instr_2016, instr_1511;
-    reg [1:0] alu_op;
-    reg [5:0] funct;
-    reg alusrc, regdst;
+    reg [1:0] wb_ctl;
+    reg[2:0]  m_ctl;
+    reg regdst, alusrc;
+    reg [1:0] aluop;
+    reg [31:0] npcout, rdata1, rdata2, s_extendout;
+    reg [4:0] instrout_2016, instrout_1511;
 
-    wire [1:0] ctlwb_out, ctlm_out;
-    wire [31:0] adder_out, alu_result_out, rdata2_out;
-    wire [4:0] muxout_out;
+    wire [1:0] wb_ctlout;
+    wire branch, memread, memwrite, zero;
+    wire [31:0] EX_MEM_NPC, alu_result, rdata2out;
+    wire [4:0] five_bit_muxout;
 
-    execute uut (
-        .clk(clk),
-        .ctlwb_in(ctlwb_in),
-        .ctlm_in(ctlm_in),
-        .npc(npc),
+    EXECUTE uut (
+        .wb_ctl(wb_ctl),
+        .m_ctl(m_ctl),
+        .regdst(regdst),
+        .alusrc(alusrc),
+        .aluop(aluop),
+        .npcout(npcout),
         .rdata1(rdata1),
         .rdata2(rdata2),
-        .s_extend(s_extend),
-        .instr_2016(instr_2016),
-        .instr_1511(instr_1511),
-        .alu_op(alu_op),
-        .funct(funct),
-        .alusrc(alusrc),
-        .regdst(regdst),
-        .ctlwb_out(ctlwb_out),
-        .ctlm_out(ctlm_out),
-        .adder_out(adder_out),
-        .alu_result_out(alu_result_out),
-        .rdata2_out(rdata2_out),
-        .muxout_out(muxout_out)
+        .s_extendout(s_extendout),
+        .instrout_2016(instrout_2016),
+        .instrout_1511(instrout_1511),
+        .wb_ctlout(wb_ctlout),
+        .branch(branch),
+        .memread(memread),
+        .memwrite(memwrite),
+        .EX_MEM_NPC(EX_MEM_NPC),
+        .zero(zero),
+        .alu_result(alu_result),
+        .rdata2out(rdata2out),
+        .five_bit_muxout(five_bit_muxout)
     );
-    
-    initial begin
-        clk = 0;
-        forever #5 clk = ~clk;
-    end
 
     initial begin
-        // Initialize inputs
-        ctlwb_in = 2'b10; ctlm_in = 2'b01;
-        npc = 32'd100; rdata1 = 32'd10; rdata2 = 32'd20; s_extend = 32'd4;
-        instr_2016 = 5'd5; instr_1511 = 5'd10;
-        alu_op = 2'b10; funct = 6'b100000;
-        alusrc = 1; regdst = 1;
+        $dumpfile("executeTB.vcd");
+        $dumpvars(0, executeTB);  
 
+        wb_ctl = 2'b10; m_ctl = 3'b001;
+        npcout = 32'd100; rdata1 = 32'd10; rdata2 = 32'd20; s_extendout = 32'd32; 
+        instrout_2016 = 5'd5; instrout_1511 = 5'd10;
+        aluop = 2'b10; alusrc = 1; regdst = 1;
         #15;
 
-        // Modify inputs to test different scenarios
         alusrc = 0; regdst = 0;
-        s_extend = 32'd8;
-        alu_op = 2'b01; funct = 6'b100010;
-
+        s_extendout = 32'd8;
+        aluop = 2'b01;
         #15;
 
-        $stop;
+        $dumpflush;  
+        $finish;      
     end
 endmodule
