@@ -41,7 +41,7 @@ module executeTB;
         wb_ctl = 2'b10; m_ctl = 3'b001; 
         npcout = 32'd100; rdata1 = 32'd10; rdata2 = 32'd20; s_extendout = 32'd32;  // next pc || data in rs || data in rt || add instruction
         instrout_2016 = 5'd5; instrout_1511 = 5'd10; // rt and rd registers
-        aluop = 2'b10; alusrc = 1; regdst = 1; // R type || use immediate || rd as destination register
+        aluop = 2'b10; alusrc = 0; regdst = 1; // R type || use immediate || rd as destination register
         #15;
 
         alusrc = 0; regdst = 0; // choose value stored in rt || select rt (instrout_2016) as destination register
